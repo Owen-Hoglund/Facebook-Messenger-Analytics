@@ -15,6 +15,13 @@ fn raw_messages_to_cleaned_messages(raw_messages: Vec<RawMessage>) -> Vec<Messag
     raw_messages.iter().map(|raw| message_cleaner(raw)).collect::<Vec<Message>>()
 } 
 
+
+
+// This is really ugly, but I couldnt figure out a way to let serde serialize only the elements that appear in each message
+// In other words, some messages only contain the fields sender, timestamp, and content,
+// while other messages contain sender, timestamp, content and reactions. So I had to make a bunch of variants that 
+// account for all the combinations of data within a single message. This converts all those variants into a normal
+// consistent struct.
 fn message_cleaner(raw: &RawMessage) -> Message {
     match raw {
         RawMessage::TextWithReactions { sender_name, timestamp_ms, content, reactions, .. } => Message {
@@ -138,12 +145,3 @@ fn message_cleaner(raw: &RawMessage) -> Message {
         },
     }
 }
-
-
-// pub struct Message {
-//     sender: String,
-//     timestamp: u64,
-//     content_type: ContentType,
-//     content: Option<String>,
-//     reactions: Option<Vec<Reaction>>,
-// }
