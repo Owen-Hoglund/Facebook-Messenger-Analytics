@@ -5,7 +5,7 @@ use crate::database_utility::table_initialization::table_initialization;
 pub fn create_database_if_none_exists() {
     let db_name = get_db_name();
     new_database(db_name.clone());
-    table_initialization(db_name.clone());
+    table_initialization(db_name);
 
 }
 
@@ -24,10 +24,10 @@ fn get_db_name() -> String{
     io::stdout().flush().expect("Not sure why this wouldnt work"); // Flushes the buffer
 
     match get_user_input().as_str() {
-        "y" | "Y" => return [db_name.to_string(), ".db".to_string()].join(""),
+        "y" | "Y" => [db_name, ".db".to_string()].join(""),
         _ => {
             println!("Could not confirm. Please try again.");
-             return get_db_name();
+            get_db_name()
         },
     }
 }
