@@ -1,7 +1,7 @@
 use rusqlite::Connection;
 use std::io::{self, Write};
 use crate::database_utility::table_initialization::table_initialization;
-
+#[allow(dead_code)]
 pub fn create_database_if_none_exists() {
     let db_name = get_db_name();
     new_database(db_name.clone());

@@ -1,5 +1,5 @@
 extern crate encoding;
-use data_processing::conversation::Conversation;
+use data_processing::{conversation::Conversation, directory_traversal};
 use dotenv::dotenv;
 use std::fs;
 mod data_processing;
@@ -10,7 +10,10 @@ fn main() {
     // Load file paths from .env (you must enter these paths yourself!)
     dotenv().ok();
     // Begins the testing process
-    test_program();
+    // test_program();
+    let test = directory_traversal::load_conversations_from_directory();
+    let sum = test.into_iter().reduce(Conversation::merge_conversations).expect("failed to reduce");
+    println!("{:?}", sum.get_messages_debug().len());
 }
 
 fn test_program(){

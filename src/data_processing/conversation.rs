@@ -1,25 +1,25 @@
-use serde::de::IgnoredAny;
-use serde::{Deserialize, Serialize, de::Deserializer};
-use serde;
-use encoding::{Encoding, EncoderTrap, DecoderTrap};
-use encoding::all::ISO_8859_1;
-use encoding::all::UTF_8;
+use serde::{Deserialize, Serialize, de::Deserializer, de::IgnoredAny};  // for deserializing JSON
+use encoding::{Encoding, EncoderTrap, DecoderTrap};                     // for fixing the mojibake in fb JSON
+use encoding::all::{ISO_8859_1, UTF_8};
 
 #[derive(Deserialize)]
 pub struct Conversation {
     participants: Vec<Participant>, 
     messages: Vec<Message>, 
+    #[serde(deserialize_with = "fix_string_encoding")]  // deserializes strings with a mojibake fix
+    title: String, // Name of groupchat, if it exists
     #[serde(deserialize_with = "fix_string_encoding")]
-    title: String,
-    thread_path: String,
+    thread_path: String, // Path to conversation, probably useless
 }
 impl Conversation {
     pub fn get_title(&self) -> String{
         self.title.clone()
     }
+    #[allow(dead_code)]
     pub fn get_participants_debug(&self) -> Vec<String>{
         self.participants.clone().into_iter().map(|x| x.name).collect::<Vec<String>>()
     }
+    #[allow(dead_code)]
     pub fn get_participants(&self) -> Vec<Participant>{
         self.participants.clone()
     }
@@ -42,10 +42,8 @@ impl Conversation {
 
 #[derive(Deserialize)]
 pub struct RawMessage {
-    // These fields will be in every message
     sender_name: String,
     timestamp_ms: u64,
-
     #[serde(flatten)]
     message_type: Option<MessageType>,
     reactions: Option<Vec<Reaction>>
@@ -86,6 +84,7 @@ impl MessageType {
 }
 #[derive(Debug, Deserialize, Clone)]
 #[serde(from = "RawMessage")]
+#[allow(dead_code)]
 pub struct Message {
     sender_name: String,
     timestamp_ms: u64,
@@ -98,10 +97,7 @@ pub struct Message {
             sender_name: m.sender_name,
             timestamp_ms: m.timestamp_ms,
             message_type: {
-                match &m.message_type {
-                    Some(message) => Some(message.message_type_matching()),
-                    None => None,
-                }
+                m.message_type.as_ref().map(|message| message.message_type_matching())
             },
             text: {
                 match &m.message_type {
@@ -146,15 +142,15 @@ pub struct Reaction {
     actor: String,
 }
 
-#[derive(Deserialize, Clone, PartialEq)]
+#[derive(Deserialize, Clone, PartialEq, Eq)]
 pub struct Participant {
     #[serde(deserialize_with = "fix_string_encoding")]
     name: String,
 }
 
-// Facebook download data is incorrectly encoded. This fixes most but not all of the errors. 
-// Largely I believe the failure cases are due to facebook having its own in house emojis
-//
+// Facebook download data is incorrectly encoded. This fixes the mojibake.
+// Some emojis are not supported by all platforms, so some of the emojis in the 
+// text may render as two emojis with a zero width joiner separating them
 fn fix_string_encoding<'de, D: Deserializer<'de>>(de: D) -> Result<String, D::Error> {
     let original = String::deserialize(de)?;
     let encoded_string = ISO_8859_1.encode(&original, EncoderTrap::Strict).unwrap();
