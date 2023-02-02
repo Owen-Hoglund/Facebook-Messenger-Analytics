@@ -11,3 +11,7 @@ serde = { version = "1.0", features = ["derive"] }
 rusqlite = {version = "0.28.0", features = ["bundled"]}
 dotenv = "0.15.0"
 encoding = "0.2"
+chrono = "0.4.23"
+[dev-dependencies]
+pretty_assertions = "1"
+json_str = "*"

@@ -1,9 +1,7 @@
 use std::fs::{self, DirEntry};
-use dotenv::dotenv;
 use crate::Conversation;
 
 pub fn load_conversations_from_directory() -> Vec<Conversation>{
-    dotenv().ok();
     let dir:String = std::env::var("TEST_DIRECTORY").expect("No value for key 'TEST_DIRECTORY' found");
     let paths = fs::read_dir(dir).unwrap();
     paths.into_iter().flatten().filter(|x| {

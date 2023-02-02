@@ -1,0 +1,5 @@
+{
+    "proper_encoding": "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz123456789-=!@#$%^&*()_+",
+    "improper_encoding": "Owen Olaf H\u00c3\u00b6glund",
+    "fixed_encoding": "Owen Olaf Höglund"
+}

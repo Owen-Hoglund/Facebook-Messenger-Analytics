@@ -2,14 +2,14 @@ use rusqlite::Connection;
 use std::io::{self, Write};
 use crate::database_utility::table_initialization::table_initialization;
 #[allow(dead_code)]
-pub fn create_database_if_none_exists() {
+pub fn create_database_return_name() -> String{
     let db_name = get_db_name();
-    new_database(db_name.clone());
-    table_initialization(db_name);
-
+    new_database(&db_name);
+    table_initialization(&db_name);
+    db_name
 }
 
-fn new_database(db_name: String){
+pub fn new_database(db_name: &str){
     match Connection::open(&db_name){
         Ok(..) => println!("Successfully created {}", db_name),
         Err(error_name) => {println!("{}", error_name)},
