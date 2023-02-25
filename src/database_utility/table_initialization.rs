@@ -17,10 +17,10 @@ pub fn table_initialization (db: &str){
     match conn.execute(
         "CREATE TABLE if NOT EXISTS messages (
              message_id INT primary key,
-             sender text NOT NULL,
-             date_time text NOT NULL,
-             content_type text,
-             content text NOT NULL,
+             sender NVARCHAR NOT NULL,
+             date_time NVARCHAR NOT NULL,
+             content_type NVARCHAR,
+             content NVARCHAR NOT NULL,
              timestamp BIGINT NOT NULL
          )",
          []

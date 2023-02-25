@@ -7,5 +7,3 @@ For obvious security reasons running this code on your own machine will take som
 You will know you are in the right place if you start finding json files. Once you have found the json files associated with the conversation you are interested in, copy the *path* to the directory that contains those files.
 4. Now you need to add "TEST_DIRECTORY='{path from step 4}'" to the .env file you created.
 5. Run the program from the command line with cargo run (this assumes you have Rust on your machine) 
-
-I do plan on automating as much as I can from the steps above, but again, due to obvious security concerns regarding your personal messages, I can't do everything for the user. 

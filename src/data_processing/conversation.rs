@@ -4,7 +4,7 @@ use encoding::all::{ISO_8859_1, UTF_8};
 
 #[derive(Deserialize)]
 pub struct Conversation {
-    participants: Vec<Participant>, 
+    pub participants: Vec<Participant>, 
     pub messages: Vec<Message>, 
     #[serde(deserialize_with = "fix_string_encoding")]  // deserializes strings with a mojibake fix
     title: String, // Name of groupchat, if it exists
@@ -112,7 +112,7 @@ pub struct Reaction {
     pub actor: String,
 }
 
-#[derive(Deserialize, Clone, PartialEq, Eq)]
+#[derive(Deserialize, Clone, PartialEq, Eq, Debug)]
 pub struct Participant {
     #[serde(deserialize_with = "fix_string_encoding")]
     pub name: String,
@@ -134,7 +134,7 @@ fn demojibake(raw_string: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde::{Deserialize, Serialize, de::Deserializer, de::IgnoredAny};  // for deserializing JSON
+    use serde::{Deserialize, Serialize};  // for deserializing JSON
 
     const EXAMPLE_DATA: &str = include_str!(r"../test_files/json_example.json");
 

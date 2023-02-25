@@ -12,6 +12,7 @@ rusqlite = {version = "0.28.0", features = ["bundled"]}
 dotenv = "0.15.0"
 encoding = "0.2"
 chrono = "0.4.23"
+thiserror = "1.0.38"
 [dev-dependencies]
 pretty_assertions = "1"
 json_str = "*"

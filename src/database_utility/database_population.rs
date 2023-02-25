@@ -86,11 +86,11 @@ pub fn insertion_batching(chat_log: Conversation, database: &str) -> Result<(), 
     }
     transaction.commit()?;
 
-    // match conn.execute(
-    //     "DELETE FROM messages WHERE content LIKE '%to your message'", []){
-    //     Ok(..) => todo!(),
-    //     Err(error) => println!("{}", error),
-    // };
+    match conn.execute(
+        "DELETE FROM messages WHERE content LIKE '%to your message'", []){
+        Ok(..) => (),
+        Err(error) => println!("{}", error),
+    };
 
     Ok(())
 }
